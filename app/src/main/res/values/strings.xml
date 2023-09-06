@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Movie DB</string>
+    <string name="movies">Movies</string>
+    <string name="favourite">Favorite</string>
+    <string name="favourite_catalogue">Favorite Catalogue</string>
+    <string name="share_movie_text">Share Movie %s</string>
+    <string name="release_date">Release Date</string>
+    <string name="category">Category</string>
+    <string name="overview">Overview</string>
+    <string name="detail_movie">Detail Movie</string>
+    <string name="no_movies_shown">No Movies Shown</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="menu_search_title">Search</string>
+</resources>
