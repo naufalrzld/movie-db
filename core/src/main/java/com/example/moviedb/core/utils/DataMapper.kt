@@ -13,8 +13,7 @@ object DataMapper {
                 genres = "",
                 overview = it.overview,
                 releaseDate = it.releaseDate ?: "-",
-                posterPath = it.posterPath ?: "",
-                favorited = false
+                posterPath = it.posterPath ?: ""
             )
         }
 
@@ -26,8 +25,7 @@ object DataMapper {
                 genres = it.genres,
                 overview = it.overview,
                 releaseDate = it.releaseDate,
-                posterPath = it.posterPath,
-                favorited = it.favorited
+                posterPath = it.posterPath
             )
         }
 
@@ -42,8 +40,7 @@ object DataMapper {
             genres = genre,
             overview = input.overview,
             releaseDate = input.releaseDate ?: "-",
-            posterPath = input.posterPath ?: "",
-            favorited = false
+            posterPath = input.posterPath ?: ""
         )
     }
 
@@ -54,7 +51,6 @@ object DataMapper {
             genres = input.genres,
             overview = input.overview,
             releaseDate = input.releaseDate,
-            posterPath = input.posterPath,
-            favorited = input.favorited
+            posterPath = input.posterPath
         )
 }

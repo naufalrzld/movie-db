@@ -23,8 +23,5 @@ data class MovieEntity(
     var releaseDate: String,
 
     @ColumnInfo(name = "posterPath")
-    var posterPath: String,
-
-    @ColumnInfo(name = "favorited")
-    var favorited: Boolean = false
+    var posterPath: String
 )

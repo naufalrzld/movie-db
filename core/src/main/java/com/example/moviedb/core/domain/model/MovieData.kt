@@ -6,6 +6,5 @@ data class MovieData(
     val genres: String,
     val releaseDate: String,
     val overview: String,
-    val posterPath: String,
-    val favorited: Boolean
+    val posterPath: String
 )
