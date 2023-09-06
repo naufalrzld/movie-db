@@ -12,7 +12,8 @@ import com.example.moviedb.databinding.ItemMovieBinding
 
 class MovieAdapter(
     private val env: IEnvironment,
-    private val onItemClickListener: (movieId: Int) -> Unit
+    private val onItemClickListener: (movieId: Int) -> Unit,
+    private val onShareClickListener: (data: MovieData) -> Unit
 ) : RecyclerView.Adapter<MovieAdapter.ViewHolder>() {
 
     var listData = listOf<MovieData>()
@@ -38,21 +39,18 @@ class MovieAdapter(
     override fun getItemCount() = listData.size
 
     inner class ViewHolder(private val binding: ItemMovieBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(data: MovieData) {
-            with(binding) {
-                Glide.with(root)
-                    .load(env.getBaseImageUrl() + data.posterPath)
-                    .apply(RequestOptions.placeholderOf(R.drawable.ic_loading).error(R.drawable.ic_error))
-                    .into(ivPoster)
+        fun bind(data: MovieData) = with(binding) {
+            Glide.with(root)
+                .load(env.getBaseImageUrl() + data.posterPath)
+                .apply(RequestOptions.placeholderOf(R.drawable.ic_loading).error(R.drawable.ic_error))
+                .into(ivPoster)
 
-                tvTitle.text = data.title
-                tvReleaseDate.text = data.releaseDate
-                tvDesc.text = data.overview
+            tvTitle.text = data.title
+            tvReleaseDate.text = data.releaseDate
+            tvDesc.text = data.overview
 
-                this.root.setOnClickListener {
-                    onItemClickListener(data.id)
-                }
-            }
+            imgShare.setOnClickListener { onShareClickListener(data) }
+            this.root.setOnClickListener { onItemClickListener(data.id) }
         }
     }
 }

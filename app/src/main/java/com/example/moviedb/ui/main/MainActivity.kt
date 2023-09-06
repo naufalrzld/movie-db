@@ -3,11 +3,14 @@ package com.example.moviedb.ui.main
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ShareCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.moviedb.R
+import com.example.moviedb.core.domain.model.MovieData
 import com.example.moviedb.core.env.IEnvironment
 import com.example.moviedb.core.utils.gone
 import com.example.moviedb.core.utils.visible
@@ -32,12 +35,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        movieAdapter = MovieAdapter(env) { movieId ->
-            Intent(this, DetailActivity::class.java).also { intent ->
-                intent.putExtra(EXTRA_MOVIE_ID, movieId)
-                startActivity(intent)
-            }
-        }
+        movieAdapter = MovieAdapter(env, ::onItemClick, ::onShareClick)
 
         binding.rvMovies.apply {
             setHasFixedSize(true)
@@ -68,6 +66,22 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
             }
+        }
+    }
+
+    private fun onItemClick(id: Int) {
+        Intent(this, DetailActivity::class.java).also { intent ->
+            intent.putExtra(EXTRA_MOVIE_ID, id)
+            startActivity(intent)
+        }
+    }
+
+    private fun onShareClick(data: MovieData) {
+        ShareCompat.IntentBuilder.from(this).apply {
+            setType("text/plain")
+            setChooserTitle("Bagikan aplikasi ini sekarang.")
+            setText(resources.getString(R.string.share_movie_text, data.title))
+            startChooser()
         }
     }
 
