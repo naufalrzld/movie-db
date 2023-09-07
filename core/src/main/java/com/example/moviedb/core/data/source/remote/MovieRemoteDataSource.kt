@@ -4,6 +4,7 @@ import com.example.moviedb.core.data.source.remote.network.ApiResponse
 import com.example.moviedb.core.data.source.remote.network.ApiService
 import com.example.moviedb.core.data.source.remote.response.MovieResponse
 import com.example.moviedb.core.env.IEnvironment
+import com.example.moviedb.core.utils.ResponseErrorMapper
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -19,8 +20,9 @@ class MovieRemoteDataSource(
             val movies = response.results
             if (movies.isNotEmpty()) emit(ApiResponse.Success(movies))
             else emit(ApiResponse.Empty)
-        } catch (e: Exception) {
-            emit(ApiResponse.Error(e.toString()))
+        } catch (e: Throwable) {
+            val (code, message) = ResponseErrorMapper.mapResponseError(e)
+            emit(ApiResponse.Error(code, message))
         }
     }.flowOn(Dispatchers.IO)
 
@@ -28,8 +30,9 @@ class MovieRemoteDataSource(
         try {
             val response = apiService.getDetailMovie(id, env.getAPIKey())
             emit(ApiResponse.Success(response))
-        } catch (e: Exception) {
-            emit(ApiResponse.Error(e.toString()))
+        } catch (e: Throwable) {
+            val (code, message) = ResponseErrorMapper.mapResponseError(e)
+            emit(ApiResponse.Error(code, message))
         }
     }.flowOn(Dispatchers.IO)
 }
