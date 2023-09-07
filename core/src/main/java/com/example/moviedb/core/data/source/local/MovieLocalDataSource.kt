@@ -7,7 +7,7 @@ import kotlinx.coroutines.flow.Flow
 class MovieLocalDataSource(private val movieDao: MovieDao) {
     fun getNowPlayingMovies(): Flow<List<MovieEntity>> = movieDao.getNowPlayingMovies()
 
-    fun getMovieDetail(id: Int): Flow<MovieEntity> = movieDao.getDetailMovieTvShow(id)
+    fun getMovieDetail(id: Int): Flow<MovieEntity> = movieDao.getDetailMovie(id)
 
     suspend fun updateMovie(data: MovieEntity) = movieDao.updateMovie(data)
 
