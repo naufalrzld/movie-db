@@ -39,7 +39,7 @@ class MovieRepository(
         }.asFlow()
     }
 
-    override fun getMovieDetail(id: Int): Flow<Resource<MovieData>> {
+    override fun getDetailMovie(id: Int): Flow<Resource<MovieData>> {
         return object : NetworkBoundResource<MovieData, MovieResponse>() {
             override fun loadFromDB(): Flow<MovieData> {
                 return movieLocalDataSource.getMovieDetail(id).map {

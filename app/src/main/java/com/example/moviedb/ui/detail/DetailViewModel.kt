@@ -12,9 +12,9 @@ class DetailViewModel(private val movieUseCase: MovieUseCase) : ViewModel() {
     private val _uiState = MutableSharedFlow<DetailUIState>()
     val uiState: SharedFlow<DetailUIState> = _uiState
 
-    fun getMovieDetail(id: Int) {
+    fun getDetailMovie(id: Int) {
         viewModelScope.launch {
-            movieUseCase.getMovieDetail(id).collect { resource ->
+            movieUseCase.getDetailMovie(id).collect { resource ->
                 val uiState = when (resource) {
                     is Resource.Loading -> DetailUIState.Loading
                     is Resource.Success -> DetailUIState.Loaded(resource.data)

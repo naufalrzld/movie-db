@@ -39,7 +39,7 @@ class DetailActivity : AppCompatActivity() {
         initObserver()
 
         val id = intent.getIntExtra(EXTRA_MOVIE_ID, 0)
-        if (id != 0) viewModel.getMovieDetail(id)
+        if (id != 0) viewModel.getDetailMovie(id)
     }
 
     private fun initObserver() {

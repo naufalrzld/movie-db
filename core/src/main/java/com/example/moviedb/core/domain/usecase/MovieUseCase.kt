@@ -6,5 +6,5 @@ import kotlinx.coroutines.flow.Flow
 
 interface MovieUseCase {
     fun getNowPlayingMovies(): Flow<Resource<List<MovieData>>>
-    fun getMovieDetail(id: Int): Flow<Resource<MovieData>>
+    fun getDetailMovie(id: Int): Flow<Resource<MovieData>>
 }

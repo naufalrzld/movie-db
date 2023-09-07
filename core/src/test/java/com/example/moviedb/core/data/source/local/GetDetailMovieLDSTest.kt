@@ -21,6 +21,19 @@ class GetDetailMovieLDSTest {
 
     @Test
     fun `should get detail movie success`() = runBlocking {
+        movieLocalDataSource.insertMovieTvShow(
+            listOf(
+                MovieEntity(
+                    1,
+                    "Movie Title 1",
+                    "",
+                    "Overview of Movie Title 1",
+                    "2023-01-01",
+                    "poster_path_1"
+                )
+            )
+        )
+        
         val actual = movieLocalDataSource.getMovieDetail(1).toList()
         val expected = MovieEntity(
             1,

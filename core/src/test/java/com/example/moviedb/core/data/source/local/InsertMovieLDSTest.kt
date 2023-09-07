@@ -23,25 +23,25 @@ class InsertMovieLDSTest {
     fun `should insert movie success`() = runBlocking {
         val newMovie = listOf(
             MovieEntity(
-                4,
-                "Movie Title 4",
+                1,
+                "Movie Title 1",
                 "",
-                "Overview of Movie Title 4",
-                "2023-01-04",
-                "poster_path_4"
+                "Overview of Movie Title 1",
+                "2023-01-01",
+                "poster_path_1"
             )
         )
 
         movieLocalDataSource.insertMovieTvShow(newMovie)
 
-        val actual = movieLocalDataSource.getMovieDetail(4).toList()
+        val actual = movieLocalDataSource.getMovieDetail(1).toList()
         val expected = MovieEntity(
-            4,
-            "Movie Title 4",
+            1,
+            "Movie Title 1",
             "",
-            "Overview of Movie Title 4",
-            "2023-01-04",
-            "poster_path_4"
+            "Overview of Movie Title 1",
+            "2023-01-01",
+            "poster_path_1"
         )
 
         assertEquals(expected, actual[0])

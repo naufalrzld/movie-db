@@ -7,5 +7,5 @@ import kotlinx.coroutines.flow.Flow
 
 class MovieInteractor(private val movieRepository: IMovieRepository) : MovieUseCase {
     override fun getNowPlayingMovies(): Flow<Resource<List<MovieData>>> = movieRepository.getNowPlayingMovies()
-    override fun getMovieDetail(id: Int): Flow<Resource<MovieData>> = movieRepository.getMovieDetail(id)
+    override fun getDetailMovie(id: Int): Flow<Resource<MovieData>> = movieRepository.getDetailMovie(id)
 }
