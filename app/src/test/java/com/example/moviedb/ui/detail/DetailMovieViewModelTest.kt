@@ -18,6 +18,9 @@ import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mockito
+import org.mockito.Mockito.times
+import org.mockito.Mockito.verify
+import org.mockito.Mockito.`when`
 
 @OptIn(ExperimentalCoroutinesApi::class, DelicateCoroutinesApi::class)
 class DetailMovieViewModelTest {
@@ -42,7 +45,7 @@ class DetailMovieViewModelTest {
 
     @Test
     fun `should success get detail movie`() = runTest {
-        Mockito.`when`(movieUseCase.getDetailMovie(1)).thenReturn(
+        `when`(movieUseCase.getDetailMovie(1)).thenReturn(
             flow {
                 emit(Resource.Loading())
                 emit(
@@ -76,14 +79,15 @@ class DetailMovieViewModelTest {
         detailViewModel.uiState.test {
             Assert.assertEquals(DetailUIState.Loading, awaitItem())
             Assert.assertEquals(expected, awaitItem())
+            cancelAndConsumeRemainingEvents()
         }
 
-        Mockito.verify(movieUseCase, Mockito.times(1)).getDetailMovie(1)
+        verify(movieUseCase, times(1)).getDetailMovie(1)
     }
 
     @Test
     fun `should error get detail movie`() = runTest {
-        Mockito.`when`(movieUseCase.getDetailMovie(1)).thenReturn(
+        `when`(movieUseCase.getDetailMovie(1)).thenReturn(
             flow {
                 emit(Resource.Loading())
                 emit(Resource.Error(404, "not found"))
@@ -97,8 +101,9 @@ class DetailMovieViewModelTest {
         detailViewModel.uiState.test {
             Assert.assertEquals(DetailUIState.Loading, awaitItem())
             Assert.assertEquals(expected, awaitItem())
+            cancelAndConsumeRemainingEvents()
         }
 
-        Mockito.verify(movieUseCase, Mockito.times(1)).getDetailMovie(1)
+        verify(movieUseCase, times(1)).getDetailMovie(1)
     }
 }

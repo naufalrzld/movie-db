@@ -117,6 +117,7 @@ class MainViewModelTest {
         mainViewModel.uiState.test {
             assertEquals(MainUIState.Loading, awaitItem())
             assertEquals(expected, awaitItem())
+            cancelAndConsumeRemainingEvents()
         }
 
         verify(movieUseCase, times(1)).getNowPlayingMovies()
@@ -124,7 +125,7 @@ class MainViewModelTest {
 
     @Test
     fun `should success get now playing movies with empty value`() = runTest {
-        Mockito.`when`(movieUseCase.getNowPlayingMovies()).thenReturn(
+        `when`(movieUseCase.getNowPlayingMovies()).thenReturn(
             flow {
                 emit(Resource.Loading())
                 emit(Resource.Success(listOf()))
@@ -136,16 +137,17 @@ class MainViewModelTest {
         mainViewModel.getNowPlayingMovies()
 
         mainViewModel.uiState.test {
-            Assert.assertEquals(MainUIState.Loading, awaitItem())
-            Assert.assertEquals(expected, awaitItem())
+            assertEquals(MainUIState.Loading, awaitItem())
+            assertEquals(expected, awaitItem())
+            cancelAndConsumeRemainingEvents()
         }
 
-        Mockito.verify(movieUseCase, Mockito.times(1)).getNowPlayingMovies()
+        verify(movieUseCase, times(1)).getNowPlayingMovies()
     }
 
     @Test
     fun `should error get now playing movies`() = runTest {
-        Mockito.`when`(movieUseCase.getNowPlayingMovies()).thenReturn(
+        `when`(movieUseCase.getNowPlayingMovies()).thenReturn(
             flow {
                 emit(Resource.Loading())
                 emit(Resource.Error(401, "auth error"))
@@ -157,10 +159,11 @@ class MainViewModelTest {
         mainViewModel.getNowPlayingMovies()
 
         mainViewModel.uiState.test {
-            Assert.assertEquals(MainUIState.Loading, awaitItem())
-            Assert.assertEquals(expected, awaitItem())
+            assertEquals(MainUIState.Loading, awaitItem())
+            assertEquals(expected, awaitItem())
+            cancelAndConsumeRemainingEvents()
         }
 
-        Mockito.verify(movieUseCase, Mockito.times(1)).getNowPlayingMovies()
+        verify(movieUseCase, times(1)).getNowPlayingMovies()
     }
 }
