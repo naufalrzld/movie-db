@@ -6,7 +6,7 @@ import com.example.moviedb.core.data.source.remote.response.MovieResponse
 import com.example.moviedb.core.env.IEnvironment
 import com.example.moviedb.core.helper.FakeEnvironment
 import com.example.moviedb.core.helper.enqueueResponse
-import com.google.common.truth.Truth
+import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
 import okhttp3.OkHttpClient
@@ -86,7 +86,18 @@ class GetNowPlayingMoviesRDSTest {
             )
         )
 
-        Truth.assertThat(actual[0]).isInstanceOf(ApiResponse.Success::class.java)
+        assertThat(actual[0]).isInstanceOf(ApiResponse.Success::class.java)
+        assertEquals(expected, actual[0])
+    }
+
+    @Test
+    fun `should get now playing movies success given 200 response with empty movie`() = runBlocking {
+        mockWebServer.enqueueResponse("get-now-playing-movie-200-empty.json", 200)
+
+        val actual = movieRemoteDataSource.getNowPlayingMovies().toList()
+        val expected = ApiResponse.Empty
+
+        assertThat(actual[0]).isInstanceOf(ApiResponse.Empty::class.java)
         assertEquals(expected, actual[0])
     }
 
@@ -97,7 +108,7 @@ class GetNowPlayingMoviesRDSTest {
         val actual = movieRemoteDataSource.getNowPlayingMovies().toList()
         val expected = ApiResponse.Error(401, "Invalid API key: You must be granted a valid key.")
 
-        Truth.assertThat(actual[0]).isInstanceOf(ApiResponse.Error::class.java)
+        assertThat(actual[0]).isInstanceOf(ApiResponse.Error::class.java)
         assertEquals(expected, actual[0])
     }
 }
