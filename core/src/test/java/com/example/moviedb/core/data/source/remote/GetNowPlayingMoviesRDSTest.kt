@@ -7,18 +7,23 @@ import com.example.moviedb.core.env.IEnvironment
 import com.example.moviedb.core.helper.FakeEnvironment
 import com.example.moviedb.core.helper.enqueueResponse
 import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runTest
 import okhttp3.OkHttpClient
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
+import org.mockito.Mockito.spy
+import org.mockito.Mockito.times
+import org.mockito.Mockito.verify
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class GetNowPlayingMoviesRDSTest {
     private lateinit var mockWebServer: MockWebServer
     private lateinit var okHttpClient: OkHttpClient
@@ -36,12 +41,13 @@ class GetNowPlayingMoviesRDSTest {
             .writeTimeout(1, TimeUnit.SECONDS)
             .build()
 
-        apiService = Retrofit.Builder()
+        val retrofit = Retrofit.Builder()
             .baseUrl(mockWebServer.url("/"))
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-            .create(ApiService::class.java)
+
+        apiService = spy(retrofit.create(ApiService::class.java))
 
         env = FakeEnvironment()
         movieRemoteDataSource = MovieRemoteDataSource(apiService, env)
@@ -53,7 +59,7 @@ class GetNowPlayingMoviesRDSTest {
     }
 
     @Test
-    fun `should get now playing movies success given 200 response`() = runBlocking {
+    fun `should get now playing movies success given 200 response`() = runTest {
         mockWebServer.enqueueResponse("get-now-playing-movie-200.json", 200)
 
         val actual = movieRemoteDataSource.getNowPlayingMovies().toList()
@@ -88,10 +94,11 @@ class GetNowPlayingMoviesRDSTest {
 
         assertThat(actual[0]).isInstanceOf(ApiResponse.Success::class.java)
         assertEquals(expected, actual[0])
+        verify(apiService, times(1)).getNowPlayingMovie(env.getAPIKey())
     }
 
     @Test
-    fun `should get now playing movies success given 200 response with empty movie`() = runBlocking {
+    fun `should get now playing movies success given 200 response with empty movie`() = runTest {
         mockWebServer.enqueueResponse("get-now-playing-movie-200-empty.json", 200)
 
         val actual = movieRemoteDataSource.getNowPlayingMovies().toList()
@@ -99,10 +106,11 @@ class GetNowPlayingMoviesRDSTest {
 
         assertThat(actual[0]).isInstanceOf(ApiResponse.Empty::class.java)
         assertEquals(expected, actual[0])
+        verify(apiService, times(1)).getNowPlayingMovie(env.getAPIKey())
     }
 
     @Test
-    fun `should get now playing movies failed given 401 response`() = runBlocking {
+    fun `should get now playing movies failed given 401 response`() = runTest {
         mockWebServer.enqueueResponse("get-now-playing-movie-401.json", 401)
 
         val actual = movieRemoteDataSource.getNowPlayingMovies().toList()
@@ -110,5 +118,6 @@ class GetNowPlayingMoviesRDSTest {
 
         assertThat(actual[0]).isInstanceOf(ApiResponse.Error::class.java)
         assertEquals(expected, actual[0])
+        verify(apiService, times(1)).getNowPlayingMovie(env.getAPIKey())
     }
 }
