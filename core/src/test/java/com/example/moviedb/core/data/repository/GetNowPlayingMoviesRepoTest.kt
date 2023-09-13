@@ -142,4 +142,55 @@ class GetNowPlayingMoviesRepoTest {
             )
         )
     }
+
+    @Test
+    fun `should success get now playing movies with empty movies`() = runTest {
+        `when`(movieRemoteDataSource.getNowPlayingMovies()).thenReturn(
+            flow {
+                emit(ApiResponse.Empty)
+            }
+        )
+
+        val actual = movieRepository.getNowPlayingMovies().toList()
+        val expected = listOf<MovieData>()
+
+        assertThat(actual[0]).isInstanceOf(Resource.Loading::class.java)
+        assertThat(actual[1]).isInstanceOf(Resource.Loading::class.java)
+        assertThat(actual[2]).isInstanceOf(Resource.Success::class.java)
+        assertEquals(expected, actual[2].data)
+
+        verify(movieRemoteDataSource, times(1)).getNowPlayingMovies()
+        verify(movieLocalDataSource, times(2)).getNowPlayingMovies()
+        verify(movieLocalDataSource, times(0)).insertMovieTvShow(
+            DataMapper.mapMovieResponseToEntity(listOf())
+        )
+    }
+
+    @Test
+    fun `should failed get now playing movies`() = runTest {
+        `when`(movieRemoteDataSource.getNowPlayingMovies()).thenReturn(
+            flow {
+                emit(
+                    ApiResponse.Error(
+                        401,
+                        "Invalid auth"
+                    )
+                )
+            }
+        )
+
+        val actual = movieRepository.getNowPlayingMovies().toList()
+
+        assertThat(actual[0]).isInstanceOf(Resource.Loading::class.java)
+        assertThat(actual[1]).isInstanceOf(Resource.Loading::class.java)
+        assertThat(actual[2]).isInstanceOf(Resource.Error::class.java)
+        assertEquals(401, actual[2].errorCode)
+        assertEquals("Invalid auth", actual[2].message)
+
+        verify(movieRemoteDataSource, times(1)).getNowPlayingMovies()
+        verify(movieLocalDataSource, times(1)).getNowPlayingMovies()
+        verify(movieLocalDataSource, times(0)).insertMovieTvShow(
+            DataMapper.mapMovieResponseToEntity(listOf())
+        )
+    }
 }
