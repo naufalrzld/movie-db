@@ -74,9 +74,8 @@ class DetailMovieViewModelTest {
             )
         )
 
-        detailViewModel.getDetailMovie(1)
-
         detailViewModel.uiState.test {
+            detailViewModel.getDetailMovie(1)
             Assert.assertEquals(DetailUIState.Loading, awaitItem())
             Assert.assertEquals(expected, awaitItem())
             cancelAndConsumeRemainingEvents()
@@ -96,9 +95,8 @@ class DetailMovieViewModelTest {
 
         val expected = DetailUIState.OnError("not found")
 
-        detailViewModel.getDetailMovie(1)
-
         detailViewModel.uiState.test {
+            detailViewModel.getDetailMovie(1)
             Assert.assertEquals(DetailUIState.Loading, awaitItem())
             Assert.assertEquals(expected, awaitItem())
             cancelAndConsumeRemainingEvents()

@@ -112,9 +112,8 @@ class MainViewModelTest {
             )
         )
 
-        mainViewModel.getNowPlayingMovies()
-
         mainViewModel.uiState.test {
+            mainViewModel.getNowPlayingMovies()
             assertEquals(MainUIState.Loading, awaitItem())
             assertEquals(expected, awaitItem())
             cancelAndConsumeRemainingEvents()
@@ -134,9 +133,8 @@ class MainViewModelTest {
 
         val expected = MainUIState.Empty
 
-        mainViewModel.getNowPlayingMovies()
-
         mainViewModel.uiState.test {
+            mainViewModel.getNowPlayingMovies()
             assertEquals(MainUIState.Loading, awaitItem())
             assertEquals(expected, awaitItem())
             cancelAndConsumeRemainingEvents()
@@ -156,9 +154,8 @@ class MainViewModelTest {
 
         val expected = MainUIState.OnError("auth error")
 
-        mainViewModel.getNowPlayingMovies()
-
         mainViewModel.uiState.test {
+            mainViewModel.getNowPlayingMovies()
             assertEquals(MainUIState.Loading, awaitItem())
             assertEquals(expected, awaitItem())
             cancelAndConsumeRemainingEvents()
